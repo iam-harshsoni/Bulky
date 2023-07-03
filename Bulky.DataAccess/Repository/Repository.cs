@@ -36,9 +36,11 @@ namespace BulkyBook.DataAccess.Repository
             {
                 foreach(var includePro in includeProperties.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query.Include(includePro);
+                    query = query.Include(includePro);
                 }
             }
+
+            
 
 
             return query.FirstOrDefault();
@@ -55,7 +57,7 @@ namespace BulkyBook.DataAccess.Repository
             {
                 foreach (var includePro in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query.Include(includePro);
+                    query = query.Include(includePro);
                 }
             }
 
