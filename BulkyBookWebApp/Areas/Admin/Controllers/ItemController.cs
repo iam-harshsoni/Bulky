@@ -123,22 +123,22 @@ namespace BulkyBookWebApp.Areas.Admin.Controllers
         }
 
         //Delete
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+        //public IActionResult Delete(int? id)
+        //{
+        //    if (id == null || id == 0)
+        //    {
+        //        return NotFound();
+        //    }
 
-            Item? itemFromDB = _unitOfWork.Item.Get(x => x.Id == id);
+        //    Item? itemFromDB = _unitOfWork.Item.Get(x => x.Id == id);
 
-            if (itemFromDB == null)
-            {
-                return NotFound();
-            };
+        //    if (itemFromDB == null)
+        //    {
+        //        return NotFound();
+        //    };
 
-            return View(itemFromDB);
-        }
+        //    return View(itemFromDB);
+        //}
 
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
@@ -154,6 +154,53 @@ namespace BulkyBookWebApp.Areas.Admin.Controllers
             _unitOfWork.Save();
             TempData["success"] = "Item deleted successfully";
             return RedirectToAction("Index");
+        }
+
+
+        #region Api Calls
+
+        public IActionResult GetAll()
+        {
+            List<Item> objItemList = _unitOfWork.Item.GetAll(includeProperties: "Category").ToList();
+            return Json(new { data = objItemList });
+        }
+
+        #endregion
+
+        //Delete API CALL
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            //Fetching the record using ID as Parameter
+
+            var itemToBeDeleted = _unitOfWork.Item.Get(x => x.Id == id);
+
+
+            //checking if data Found or not
+            if (itemToBeDeleted == null)
+            {
+                return Json(new { success = false, message = "Error while deleting." });
+            }
+
+            //Image Deleting Logic before deleting entire Item
+
+            //Fetching the path of the image
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath,
+                itemToBeDeleted.ImageURL.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                //deleteing the image
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            //deleting the record
+
+            _unitOfWork.Item.Remove(itemToBeDeleted);
+            _unitOfWork.Save();
+
+            return Json(new { success = true, message = "Deleting Successful." });
+
         }
     }
 }
