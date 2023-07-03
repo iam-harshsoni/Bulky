@@ -21,7 +21,7 @@ namespace BulkyBookWebApp.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            List<Item> objItemList = _unitOfWork.Item.GetAll().ToList();
+            List<Item> objItemList = _unitOfWork.Item.GetAll(includeProperties:"Category").ToList();
 
             return View(objItemList);
         }

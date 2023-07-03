@@ -19,24 +19,46 @@ namespace BulkyBook.DataAccess.Repository
         {
             _db = db;
             this.dbSet = _db.Set<T>();
+
+            _db.Items.Include(x => x.Category).Include(x => x.CategoryId);
         }
 
         public void Add(T enitiy)
         {
             dbSet.Add(enitiy);
         }
-        public T Get(Expression<Func<T, bool>> filter)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach(var includePro in includeProperties.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query.Include(includePro);
+                }
+            }
 
 
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll()
+        // indlucing this too Entity as well 'Category,CoverType' because Items uses it as Forieng key so we can fetch data of these tables using Include function of Entity Framework Core
+
+        // Populating Navigation Property Using ".include()" 
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includePro in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query.Include(includePro);
+                }
+            }
+
             return query.ToList();
         }
 
