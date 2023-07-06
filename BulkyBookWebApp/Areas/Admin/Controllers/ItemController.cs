@@ -26,6 +26,7 @@ namespace BulkyBookWebApp.Areas.Admin.Controllers
             return View(objItemList);
         }
 
+       
         public IActionResult UpSert(int? id)   //Update + Insrert
         {
 
@@ -106,7 +107,7 @@ namespace BulkyBookWebApp.Areas.Admin.Controllers
 
                 
                 _unitOfWork.Save();
-                TempData["success"] = "Item created successfully";
+                TempData["success"] = "Item created/updated successfully";
                 return RedirectToAction("Index");
             }
             else
@@ -153,6 +154,7 @@ namespace BulkyBookWebApp.Areas.Admin.Controllers
             _unitOfWork.Item.Remove(obj);
             _unitOfWork.Save();
             TempData["success"] = "Item deleted successfully";
+
             return RedirectToAction("Index");
         }
 

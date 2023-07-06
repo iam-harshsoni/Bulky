@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="row pt-2">
-                    <div class="col-6 col-md-3"> <button type="submit" class="btn btn-primary form-control">Create</button></div>
+                            <div class="col-6 col-md-3"> <button type="submit" class="btn btn-primary form-control">@(Model.Item.Id != 0 ? "Update" : "Create ")</button></div>
                     <div class="col-6 col-md-3"><a asp-controller="Item" asp-action="Index" class="btn btn-outline-primary border form-control">Back to list</a></div>
                 </div>
 
@@ -108,9 +108,7 @@
                     <img src="@Model.Item.ImageURL" width="100%" style="border-radius:5px;border:1px solid #bbb9b9"/>
                 </div>
             </div>
-
-
-            
+                       
 
         </form>
     </div>
